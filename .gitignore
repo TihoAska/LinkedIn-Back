@@ -396,3 +396,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Ignore development settings if they contain sensitive information
+appsettings.json
+appsettings.Development.json
