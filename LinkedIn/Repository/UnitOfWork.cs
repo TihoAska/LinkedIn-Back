@@ -1,0 +1,34 @@
+﻿using LinkedIn.Data;
+using LinkedIn.Repository.IRepository;
+
+namespace LinkedIn.Repository
+{
+    public class UnitOfWork : IUnitOfWork
+    {
+        private readonly IDataContext _context;
+        public IPageRepository Pages { get; private set; }
+        public IUserRepository Users { get; private set; }
+        public IConnectionsRepository Connections { get; private set; }
+        public IExperienceRepository Experiences { get; private set; }
+        public IEducationRepository Educations { get; private set; }
+        public IInstitutionRepository Institutions { get; private set; }
+        public ILicensesRepository Licenses { get; private set; }
+
+        public UnitOfWork(IDataContext dataContext)
+        {
+            _context = dataContext;
+            Pages = new PageRepository(_context);
+            Users = new UserRepository(_context);
+            Connections = new ConnectionsRepository(_context);
+            Experiences = new ExperienceRepository(_context);
+            Educations = new EducationRepository(_context);
+            Institutions = new InstitutionRepository(_context);
+            Licenses = new LicensesRepository(_context);
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+    }
+}
