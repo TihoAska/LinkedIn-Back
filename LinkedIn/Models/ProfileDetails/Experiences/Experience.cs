@@ -13,6 +13,9 @@ namespace LinkedIn.Models.ProfileDetails.Experiences
         [ForeignKey("UserId")]
         public User User { get; set; }
         public string Position { get; set; }
+        public int CompanyId { get; set; }
+
+        [ForeignKey("CompanyId")]
         public Page Company { get; set; }
         public string CompanyImageUrl { get; set; } = "../../../assets/images/pageLogos/default-experience.png";
         public string EmploymentType { get; set; } = "Full-time";
@@ -22,6 +25,6 @@ namespace LinkedIn.Models.ProfileDetails.Experiences
 
         [ForeignKey("CompanyLocationId")]
         public CompanyLocation Location { get; set; }
-        public bool IsRemote { get; set; }
+        public string LocationType { get; set; } = "On-site";
     }
 }
