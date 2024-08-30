@@ -1,5 +1,6 @@
 ﻿using LinkedIn.Data;
 using LinkedIn.Repository.IRepository;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace LinkedIn.Repository
 {
@@ -13,6 +14,7 @@ namespace LinkedIn.Repository
         public IEducationRepository Educations { get; private set; }
         public IInstitutionRepository Institutions { get; private set; }
         public ILicensesRepository Licenses { get; private set; }
+        public ICompanyLocationsRepository CompanyLocations { get; private set; }
 
         public UnitOfWork(IDataContext dataContext)
         {
@@ -24,6 +26,7 @@ namespace LinkedIn.Repository
             Educations = new EducationRepository(_context);
             Institutions = new InstitutionRepository(_context);
             Licenses = new LicensesRepository(_context);
+            CompanyLocations = new CompanyLocationsRepository(_context);
         }
 
         public async Task<int> SaveChangesAsync()

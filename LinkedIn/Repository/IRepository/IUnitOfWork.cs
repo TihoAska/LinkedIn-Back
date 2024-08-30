@@ -9,6 +9,7 @@
         IEducationRepository Educations { get; }
         IInstitutionRepository Institutions { get; }
         ILicensesRepository Licenses { get; }
+        ICompanyLocationsRepository CompanyLocations { get; }
         Task<int> SaveChangesAsync();
     }
 }
