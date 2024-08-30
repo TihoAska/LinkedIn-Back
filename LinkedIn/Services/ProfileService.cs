@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using LinkedIn.Data;
 using LinkedIn.Models.Pages;
 using LinkedIn.Models.ProfileDetails.Educations;
 using LinkedIn.Models.ProfileDetails.Experiences;
 using LinkedIn.Models.ProfileDetails.Languages;
 using LinkedIn.Models.ProfileDetails.LicensesAndCerfitications;
+using LinkedIn.Models.ProfileDetails.Locations;
 using LinkedIn.Models.ProfileDetails.Skills;
 using LinkedIn.Repository.IRepository;
 using LinkedIn.Services.IServices;
@@ -80,12 +82,15 @@ namespace LinkedIn.Services
                 throw new Exception("Company with the given name was not found!");
             }
 
+            var companyLocationFromDb = await _unitOfWork.CompanyLocations.GetCompanyLocationByCityName(createRequest.Location.City, cancellationToken);
             var newExperience = _autoMapper.Map<Experience>(createRequest);
 
-            newExperience.Company = companyFromDb;
+            newExperience.CompanyId = companyFromDb.Id;
+            newExperience.CompanyLocationId = companyLocationFromDb.Id;
             newExperience.CompanyImageUrl = companyFromDb.ImageUrl;
 
-            _unitOfWork.Experiences.Add(newExperience);
+            _unitOfWork.Experiences.Add(newExperience); 
+            await _unitOfWork.SaveChangesAsync();
 
             return newExperience;
         }
@@ -142,6 +147,9 @@ namespace LinkedIn.Services
                 UserId = experience.UserId,
                 Position = experience.Position,
                 Company = experience.Company,
+                CompanyId = experience.CompanyId,
+                CompanyLocationId = experience.CompanyLocationId,
+                CompanyImageUrl = experience.CompanyImageUrl,
                 EmploymentType = experience.EmploymentType,
                 StartTime = experience.StartTime,
                 EndTime = experience.EndTime,
@@ -220,6 +228,26 @@ namespace LinkedIn.Services
                 Description = skill.Description,
                 SkillsImageUrl = skill.SkillsImageUrl,
             });
+        }
+
+        public async Task<Experience> EditExperienceForUser(ExperienceUpdateRequest updateRequest, CancellationToken cancellationToken)
+        {
+            var experienceFromDb = await _unitOfWork.Experiences.GetExperienceById(updateRequest.Id, cancellationToken);
+            var companyFromDb = await _unitOfWork.Pages.GetByName(updateRequest.CompanyName, cancellationToken);
+
+            experienceFromDb.Position = updateRequest.Position;
+            experienceFromDb.EmploymentType = updateRequest.EmploymentType;
+            experienceFromDb.CompanyId = companyFromDb.Id;
+            experienceFromDb.Company = companyFromDb;
+            experienceFromDb.CompanyImageUrl = companyFromDb.ImageUrl;
+            experienceFromDb.Location = updateRequest.Location;
+            experienceFromDb.LocationType = updateRequest.LocationType;
+            experienceFromDb.StartTime = updateRequest.StartDate;
+            experienceFromDb.EndTime = updateRequest.EndDate;
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return experienceFromDb;
         }
     }
 }
