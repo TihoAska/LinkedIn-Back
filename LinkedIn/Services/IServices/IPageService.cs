@@ -1,4 +1,5 @@
 ﻿using LinkedIn.Models.Pages;
+using LinkedIn.Models.ProfileDetails.Locations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,5 +17,8 @@ namespace LinkedIn.Services.IServices
         Task<IdentityResult> Unfollow(int pageId, int userId, CancellationToken cancellationToken);
         Task<Page> Create(PageCreateRequest createRequest, CancellationToken cancellationToken);
         Task<bool> Delete(int id, CancellationToken cancellationToken);
+        Task<CompanyLocation> GetCompanyLocationByCityName(string cityName, CancellationToken cancellationToken);
+        Task<IEnumerable<CompanyLocation>> GetAllCompanyLocations(CancellationToken cancellationToken);
+        Task<CompanyLocation> GetCompanyLocationByLocationId(int locationId, CancellationToken cancellationToken);
     }
 }

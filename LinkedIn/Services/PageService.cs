@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using LinkedIn.Models.Pages;
+using LinkedIn.Models.ProfileDetails.Locations;
 using LinkedIn.Models.Users;
 using LinkedIn.Repository.IRepository;
 using LinkedIn.Services.IServices;
 using Microsoft.AspNetCore.Identity;
+using System.Reflection.Metadata.Ecma335;
+using System.Runtime.InteropServices;
 
 namespace LinkedIn.Services
 {
@@ -137,6 +140,37 @@ namespace LinkedIn.Services
             await _unitOfWork.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<CompanyLocation> GetCompanyLocationByCityName(string cityName, CancellationToken cancellationToken)
+        {
+            var comapanyLocationFromDb = await _unitOfWork.CompanyLocations.GetCompanyLocationByCityName(cityName, cancellationToken) ?? throw new Exception("No Company Location with the given city name was found!");
+            
+            return comapanyLocationFromDb;
+        }
+
+        public async Task<CompanyLocation> GetCompanyLocationByLocationId(int locationId, CancellationToken cancellationToken)
+        {
+            var companyLocationFromDb = await _unitOfWork.CompanyLocations.GetCompanyLocationByLocationId(locationId, cancellationToken);
+
+            if(companyLocationFromDb == null)
+            {
+                throw new Exception("CompanyLocation with the given ID was not found!");
+            }
+
+            return companyLocationFromDb;
+        }
+
+        public async Task<IEnumerable<CompanyLocation>> GetAllCompanyLocations(CancellationToken cancellationToken)
+        {
+            var companyLocationsFromDb = await _unitOfWork.CompanyLocations.GetAll(cancellationToken); 
+
+            if(companyLocationsFromDb == null)
+            {
+                return [];
+            }
+
+            return companyLocationsFromDb;
         }
     }
 }
