@@ -28,5 +28,6 @@ namespace LinkedIn.Data
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
         EntityEntry<TEntity> Add<TEntity>(TEntity entity) where TEntity : class;
         EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
+        void LogTracker();
     }
 }

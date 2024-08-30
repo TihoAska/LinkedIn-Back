@@ -30,6 +30,16 @@ namespace LinkedIn.Data
         public DbSet<CompanyLocation> CompanyLocations { get; set; }
         public DbSet<UserLocation> UserLocations { get; set; }
 
+        public void LogTracker()
+        {
+            var entries = ChangeTracker.Entries();
+
+            foreach (var entry in entries)
+            {
+                Console.WriteLine($"Entity: {entry.Entity.GetType().Name}, State: {entry.State}");
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
