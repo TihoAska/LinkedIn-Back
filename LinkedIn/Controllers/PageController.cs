@@ -1,4 +1,5 @@
 ﻿using LinkedIn.Models.Pages;
+using LinkedIn.Services;
 using LinkedIn.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -152,6 +153,48 @@ namespace LinkedIn.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetCompanyLocationByCityName(string cityName, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _pageService.GetCompanyLocationByCityName(cityName, cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetAllCompanyLocations(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _pageService.GetAllCompanyLocations(cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetCompanyLocationByLocationId(int locationId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _pageService.GetCompanyLocationByLocationId(locationId, cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
             }
         }
     }
