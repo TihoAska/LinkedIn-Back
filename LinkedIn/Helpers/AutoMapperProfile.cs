@@ -22,7 +22,9 @@ namespace LinkedIn.Helpers
 
             CreateMap<EducationCreateRequest, UserEducation>();
 
-            CreateMap<ExperienceCreateRequest, Experience>();
+            CreateMap<ExperienceCreateRequest, Experience>()
+                .ForMember(dest => dest.CompanyLocationId, opt => opt.MapFrom(src => src.Location.Id))
+                .ForMember(dest => dest.Location, opt => opt.Ignore());
 
             CreateMap<LanguagesCreateRequest, UserLanguages>();
 
