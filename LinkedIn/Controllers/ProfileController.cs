@@ -48,6 +48,20 @@ namespace LinkedIn.Controllers
             }
         }
 
+        [HttpPut]
+        public async Task<ActionResult> EditExperienceForUser(ExperienceUpdateRequest updateRequest, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _profileService.EditExperienceForUser(updateRequest, cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetAllEducationsByUserId(int id, CancellationToken cancellationToken)
         {
