@@ -36,7 +36,10 @@ builder.Services.AddScoped<JWTHandler>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddDbContext<IDataContext, DataContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("WebApiDatabase")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("WebApiDatabase"))
+        .EnableSensitiveDataLogging()// Log sensitive data like parameter values
+        .LogTo(Console.WriteLine, LogLevel.Information) // Log to console or wherever your logger is configured
+        .EnableDetailedErrors()); // More detailed error messages
 
 builder.Services.AddCors(options =>
 {
