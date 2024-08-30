@@ -2,6 +2,7 @@
 using LinkedIn.Models.ProfileDetails.Experiences;
 using LinkedIn.Models.ProfileDetails.Languages;
 using LinkedIn.Models.ProfileDetails.LicensesAndCerfitications;
+using LinkedIn.Models.ProfileDetails.Locations;
 using LinkedIn.Models.ProfileDetails.Skills;
 
 namespace LinkedIn.Services.IServices
@@ -18,5 +19,6 @@ namespace LinkedIn.Services.IServices
         Task<LicensesAndCertifications> CreateLicensesAndCertificationsForUser(LicensesCreateRequest createRequest, CancellationToken cancellationToken);
         Task<UserSkills> CreateSkills(SkillsCreateRequest createRequest, CancellationToken cancellationToken);
         Task<UserLanguages> CreateLanguages(LanguagesCreateRequest createRequest, CancellationToken cancellationToken);
+        Task<Experience> EditExperienceForUser(ExperienceUpdateRequest updateRequest, CancellationToken cancellationToken);
     }
 }

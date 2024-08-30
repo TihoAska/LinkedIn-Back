@@ -86,7 +86,6 @@ namespace LinkedIn.Services
             newExperience.CompanyImageUrl = companyFromDb.ImageUrl;
 
             _unitOfWork.Experiences.Add(newExperience);
-            await _unitOfWork.SaveChangesAsync();
 
             return newExperience;
         }
