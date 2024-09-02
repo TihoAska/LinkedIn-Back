@@ -166,6 +166,7 @@ namespace LinkedIn.Services
                 StartTime = experience.StartTime,
                 EndTime = experience.EndTime,
                 Location = experience.Location,
+                LocationType = experience.LocationType,
             });
         }
 
