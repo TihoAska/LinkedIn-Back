@@ -32,6 +32,8 @@ namespace LinkedIn.Repository
                 .Include(user => user.Education)
                 .Include(user => user.Experience)
                     .ThenInclude(experience => experience.Company)
+                 .Include(user => user.Experience)
+                    .ThenInclude(experience => experience.Location)
                 .Include(user => user.Languages)
                 .Include(user => user.Skills)
                 .Include(user => user.LicensesAndCertifications)
