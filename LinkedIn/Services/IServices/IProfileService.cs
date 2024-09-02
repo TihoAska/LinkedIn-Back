@@ -20,5 +20,6 @@ namespace LinkedIn.Services.IServices
         Task<UserSkills> CreateSkills(SkillsCreateRequest createRequest, CancellationToken cancellationToken);
         Task<UserLanguages> CreateLanguages(LanguagesCreateRequest createRequest, CancellationToken cancellationToken);
         Task<Experience> EditExperienceForUser(ExperienceUpdateRequest updateRequest, CancellationToken cancellationToken);
+        Task<IEnumerable<Institution>> GetAllInstitutions(CancellationToken cancellationToken);
     }
 }

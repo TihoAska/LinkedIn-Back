@@ -95,6 +95,18 @@ namespace LinkedIn.Services
             return newExperience;
         }
 
+        public async Task<IEnumerable<Institution>> GetAllInstitutions(CancellationToken cancellationToken)
+        {
+            var institutionsFromDb = await _unitOfWork.Institutions.GetAll(cancellationToken);
+
+            if(institutionsFromDb == null)
+            {
+                return [];
+            }
+            
+            return institutionsFromDb;
+        }
+
         public Task<UserLanguages> CreateLanguages(LanguagesCreateRequest createRequest, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();

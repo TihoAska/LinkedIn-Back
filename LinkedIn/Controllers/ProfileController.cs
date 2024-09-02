@@ -63,6 +63,20 @@ namespace LinkedIn.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> GetAllInstitutions(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _profileService.GetAllInstitutions(cancellationToken);
+                return Ok(result);
+            } 
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet]
         public async Task<ActionResult> GetAllEducationsByUserId(int id, CancellationToken cancellationToken)
         {
             try
