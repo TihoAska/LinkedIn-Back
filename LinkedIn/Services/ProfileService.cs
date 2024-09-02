@@ -261,5 +261,24 @@ namespace LinkedIn.Services
 
             return experienceFromDb;
         }
+
+        public async Task<UserEducation> EditEducationForUser(EducationUpdateRequest updateRequest, CancellationToken cancellationToken)
+        {
+            var educationFromDb = await _unitOfWork.Educations.GetById(updateRequest.Id, cancellationToken);
+            var institutionFromDb = await _unitOfWork.Institutions.GetByName(updateRequest.School, cancellationToken);
+
+            educationFromDb.Name = updateRequest.School;
+            educationFromDb.Degree = updateRequest.Degree;
+            educationFromDb.FieldOfStudy = updateRequest.FieldOfStudy;
+            educationFromDb.StartTime = updateRequest.StartDate;
+            educationFromDb.EndTime = updateRequest.EndDate;
+            educationFromDb.SchoolImageUrl = institutionFromDb.SchoolImageUrl;
+            educationFromDb.InstitutionId = institutionFromDb.Id;
+            educationFromDb.Institution = institutionFromDb;
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return educationFromDb;
+        }
     }
 }

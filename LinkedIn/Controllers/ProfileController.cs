@@ -104,6 +104,20 @@ namespace LinkedIn.Controllers
             }
         }
 
+        [HttpPut]
+        public async Task<ActionResult> EditEducationForUser(EducationUpdateRequest updateRequest, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _profileService.EditEducationForUser(updateRequest, cancellationToken);
+                return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetAllLicensesAndCertificationsByUserId(int id, CancellationToken cancellationToken)
         {
