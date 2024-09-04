@@ -22,5 +22,6 @@ namespace LinkedIn.Services.IServices
         Task<Experience> EditExperienceForUser(ExperienceUpdateRequest updateRequest, CancellationToken cancellationToken);
         Task<IEnumerable<Institution>> GetAllInstitutions(CancellationToken cancellationToken);
         Task<UserEducation> EditEducationForUser(EducationUpdateRequest updateRequest, CancellationToken cancellationToken);
+        Task<LicensesAndCertifications> EditLicenseOrCertificationForUser(LicenseUpdateRequest updateRequest, CancellationToken cancellationToken);
     }
 }

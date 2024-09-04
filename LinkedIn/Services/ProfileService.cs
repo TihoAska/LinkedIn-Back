@@ -224,6 +224,27 @@ namespace LinkedIn.Services
             return newLicense;
         }
 
+        public async Task<LicensesAndCertifications> EditLicenseOrCertificationForUser(LicenseUpdateRequest updateRequest, CancellationToken cancellationToken)
+        {
+            var licenseFromDb = await _unitOfWork.Licenses.GetById(updateRequest.Id, cancellationToken);
+            var organizationFromDb = await _unitOfWork.Pages.GetByName(updateRequest.IssuingOrganization, cancellationToken);
+
+            if(licenseFromDb == null)
+            {
+                throw new Exception("License with the given ID was not found!");
+            }
+
+            licenseFromDb.Name = updateRequest.Name;
+            licenseFromDb.IssuingOrganization = updateRequest.IssuingOrganization;
+            licenseFromDb.IssueDate = updateRequest.IssueDate;
+            licenseFromDb.CredentialId = updateRequest.CredentialId;
+            licenseFromDb.OrganizationImageUrl = organizationFromDb.ImageUrl;
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return licenseFromDb;
+        }
+
         public async Task<IEnumerable<UserSkills>> GetAllSkillsByUserId(int userId, CancellationToken cancellationToken)
         {
             var userFromDb = await _unitOfWork.Users.GetByIdWithUserDetails(userId, cancellationToken);
