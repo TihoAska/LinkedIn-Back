@@ -12,6 +12,11 @@ namespace LinkedIn.Repository
             
         }
 
+        public async Task<LicensesAndCertifications> GetById(int id, CancellationToken cancellationToken)
+        {
+            return await _query.Where(license => license.Id == id).FirstOrDefaultAsync(cancellationToken);
+        }
+
         public async Task<IEnumerable<LicensesAndCertifications>> GetAllByUserId(int userId, CancellationToken cancellationToken)
         {
             return await _query.Where(license => license.UserId == userId).ToListAsync(cancellationToken);
