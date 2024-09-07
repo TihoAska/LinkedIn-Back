@@ -1,5 +1,6 @@
 ﻿using LinkedIn.Models.ProfileDetails.Educations;
 using LinkedIn.Models.ProfileDetails.Experiences;
+using LinkedIn.Models.ProfileDetails.Languages;
 using LinkedIn.Models.ProfileDetails.LicensesAndCerfitications;
 using LinkedIn.Services.IServices;
 using Microsoft.AspNetCore.Http;
@@ -180,6 +181,20 @@ namespace LinkedIn.Controllers
             try
             {
                 var result = await _profileService.GetAllLanguagesByUserId(id, cancellationToken);  
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> EditUserLanguage(LanguagesUpdateRequest updateRequest, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _profileService.EditLanguage(updateRequest, cancellationToken);
                 return Ok(result);
             }
             catch (Exception ex)

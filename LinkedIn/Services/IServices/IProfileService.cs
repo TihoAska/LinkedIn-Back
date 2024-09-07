@@ -23,5 +23,6 @@ namespace LinkedIn.Services.IServices
         Task<IEnumerable<Institution>> GetAllInstitutions(CancellationToken cancellationToken);
         Task<UserEducation> EditEducationForUser(EducationUpdateRequest updateRequest, CancellationToken cancellationToken);
         Task<LicensesAndCertifications> EditLicenseOrCertificationForUser(LicenseUpdateRequest updateRequest, CancellationToken cancellationToken);
+        Task<UserLanguages> EditLanguage(LanguagesUpdateRequest updateRequest, CancellationToken cancellationToken);
     }
 }

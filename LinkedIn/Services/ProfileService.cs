@@ -302,5 +302,22 @@ namespace LinkedIn.Services
 
             return educationFromDb;
         }
+
+        public async Task<UserLanguages> EditLanguage(LanguagesUpdateRequest updateRequest, CancellationToken cancellationToken)
+        {
+            var languageFromDb = await _unitOfWork.Languages.GetById(updateRequest.Id, cancellationToken);
+
+            if(languageFromDb == null)
+            {
+                throw new Exception("UserLanguage with the given ID was not found!");
+            }
+
+            languageFromDb.Name = updateRequest.Name;
+            languageFromDb.Proficiency = updateRequest.Proficiency;
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return languageFromDb;
+        }
     }
 }
