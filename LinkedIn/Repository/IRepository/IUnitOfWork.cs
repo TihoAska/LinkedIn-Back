@@ -10,6 +10,7 @@
         IInstitutionRepository Institutions { get; }
         ILicensesRepository Licenses { get; }
         ICompanyLocationsRepository CompanyLocations { get; }
+        ILanguageRepository Languages { get; }
         Task<int> SaveChangesAsync();
     }
 }
