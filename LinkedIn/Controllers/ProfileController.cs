@@ -189,6 +189,20 @@ namespace LinkedIn.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult> CreateLanguageForUser(LanguagesCreateRequest createRequest, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _profileService.CreateLanguageForUser(createRequest, cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpPut]
         public async Task<ActionResult> EditUserLanguage(LanguagesUpdateRequest updateRequest, CancellationToken cancellationToken)
         {

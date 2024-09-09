@@ -107,9 +107,14 @@ namespace LinkedIn.Services
             return institutionsFromDb;
         }
 
-        public Task<UserLanguages> CreateLanguages(LanguagesCreateRequest createRequest, CancellationToken cancellationToken)
+        public async Task<UserLanguages> CreateLanguageForUser(LanguagesCreateRequest createRequest, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var newLanguage = _autoMapper.Map<UserLanguages>(createRequest);
+
+            _unitOfWork.Languages.Add(newLanguage);
+            await _unitOfWork.SaveChangesAsync();
+
+            return newLanguage;
         }
 
         public Task<LicensesAndCertifications> CreateLicensesAndCertifications(LicensesCreateRequest createRequest, CancellationToken cancellationToken)
