@@ -175,6 +175,21 @@ namespace LinkedIn.Controllers
             }
         }
 
+
+        [HttpPost]
+        public async Task<ActionResult> CreateSkill(SkillsCreateRequest createRequest, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _profileService.CreateSkill(createRequest, cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetAllLanguagesByUserId(int id, CancellationToken cancellationToken)
         {
