@@ -11,6 +11,7 @@
         ILicensesRepository Licenses { get; }
         ICompanyLocationsRepository CompanyLocations { get; }
         ILanguageRepository Languages { get; }
+        ISkillRepository Skills { get; }
         Task<int> SaveChangesAsync();
     }
 }

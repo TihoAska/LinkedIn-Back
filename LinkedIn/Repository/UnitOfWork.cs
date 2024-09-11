@@ -16,6 +16,7 @@ namespace LinkedIn.Repository
         public ILicensesRepository Licenses { get; private set; }
         public ICompanyLocationsRepository CompanyLocations { get; private set; }
         public ILanguageRepository Languages { get; private set; }
+        public ISkillRepository Skills { get; private set; }
 
         public UnitOfWork(IDataContext dataContext)
         {
@@ -29,6 +30,7 @@ namespace LinkedIn.Repository
             Licenses = new LicensesRepository(_context);
             CompanyLocations = new CompanyLocationsRepository(_context);
             Languages = new LanguageRepository(_context);
+            Skills = new SkillRepository(_context);
         }
 
         public async Task<int> SaveChangesAsync()

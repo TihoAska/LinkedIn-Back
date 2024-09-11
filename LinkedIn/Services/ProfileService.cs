@@ -122,7 +122,18 @@ namespace LinkedIn.Services
             throw new NotImplementedException();
         }
 
-        public Task<UserSkills> CreateSkills(SkillsCreateRequest createRequest, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Skill>> GetAllSkills(CancellationToken cancellationToken)
+        {
+            var skillsFromDb = await _unitOfWork.Skills.GetAll(cancellationToken);
+
+            if(skillsFromDb == null)
+            {
+                return [];
+            }
+
+            return skillsFromDb;
+        }
+
         public async Task<Skill> CreateSkill(SkillsCreateRequest createRequest, CancellationToken cancellationToken)
         {
             var newSkill = _autoMapper.Map<Skill>(createRequest);

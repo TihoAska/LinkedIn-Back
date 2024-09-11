@@ -162,6 +162,20 @@ namespace LinkedIn.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> GetAllSkills(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _profileService.GetAllSkills(cancellationToken);
+                return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet]
         public async Task<ActionResult> GetAllSkillsByUserId(int id, CancellationToken cancellationToken)
         {
             try

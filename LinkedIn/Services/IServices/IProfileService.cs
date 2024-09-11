@@ -17,7 +17,7 @@ namespace LinkedIn.Services.IServices
         Task<Experience> CreateExperienceForUser(ExperienceCreateRequest createRequest, CancellationToken cancellationToken);
         Task<UserEducation> CreateEducationForUser(EducationCreateRequest createRequest, CancellationToken cancellationToken);
         Task<LicensesAndCertifications> CreateLicensesAndCertificationsForUser(LicensesCreateRequest createRequest, CancellationToken cancellationToken);
-        Task<UserSkills> CreateSkills(SkillsCreateRequest createRequest, CancellationToken cancellationToken);
+        Task<IEnumerable<Skill>> GetAllSkills(CancellationToken cancellationToken);
         Task<Skill> CreateSkill(SkillsCreateRequest createRequest, CancellationToken cancellationToken);
         Task<UserSkills> CreateSkillForUser(SkillForUserCreateRequest createRequest, CancellationToken cancellationToken);
         Task<UserLanguages> CreateLanguageForUser(LanguagesCreateRequest createRequest, CancellationToken cancellationToken);
