@@ -32,7 +32,9 @@ namespace LinkedIn.Helpers
 
             CreateMap<CompanyLocationCreateRequest, CompanyLocation>();
 
-            CreateMap<SkillsCreateRequest, UserSkills>();
+            CreateMap<SkillsCreateRequest, Skill>();
+
+            CreateMap<SkillForUserCreateRequest, UserSkills>();
         }
     }
 }
