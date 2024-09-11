@@ -2,6 +2,7 @@
 using LinkedIn.Models.ProfileDetails.Experiences;
 using LinkedIn.Models.ProfileDetails.Languages;
 using LinkedIn.Models.ProfileDetails.LicensesAndCerfitications;
+using LinkedIn.Models.ProfileDetails.Skills;
 using LinkedIn.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
