@@ -175,6 +175,19 @@ namespace LinkedIn.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult> CreateSkillForUser(SkillForUserCreateRequest createRequest, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _profileService.CreateSkillForUser(createRequest, cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
 
         [HttpPost]
         public async Task<ActionResult> CreateSkill(SkillsCreateRequest createRequest, CancellationToken cancellationToken)

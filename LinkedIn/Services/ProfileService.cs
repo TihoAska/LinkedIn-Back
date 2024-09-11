@@ -133,8 +133,51 @@ namespace LinkedIn.Services
             return newSkill;
         }
 
+        public async Task<UserSkills> CreateSkillForUser(SkillForUserCreateRequest createRequest, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var userFromDb = await _unitOfWork.Users.GetByIdWithUserDetails(createRequest.UserId, cancellationToken);
+            var newSkill = _autoMapper.Map<UserSkills>(createRequest);
+            var companyFromDb = await _unitOfWork.Pages.GetByName(createRequest.SkillDomain, cancellationToken);
+
+            if(userFromDb == null)
+            {
+                throw new Exception("User with the given ID was not found!");
+            }
+
+            var result = userFromDb.Skills.Find(skill => skill.Name == createRequest.Name);
+            if(result != null)
+            {
+                if(result.Description == createRequest.Description)
+                {
+                    throw new Exception("This skill is already on your profile");
+                }
+            }
+
+            if(companyFromDb == null)
+            {
+                var institutionFromDb = await _unitOfWork.Institutions.GetByName(createRequest.SkillDomain, cancellationToken);
+
+                if(institutionFromDb == null)
+                {
+                    throw new Exception("Institution with the given ID was not found!");
+                }
+
+                newSkill.SkillsImageUrl = institutionFromDb.SchoolImageUrl;
+            }
+            else
+            {
+                newSkill.SkillsImageUrl = companyFromDb.ImageUrl;
+            }
+
+            if(userFromDb.Skills == null)
+        {
+                userFromDb.Skills = new List<UserSkills>();  
+            }
+            
+            userFromDb.Skills.Add(newSkill);
+            await _unitOfWork.SaveChangesAsync();
+
+            return newSkill;
         }
 
         public async Task<IEnumerable<UserEducation>> GetAllEducationsByUserId(int userId, CancellationToken cancellationToken)
