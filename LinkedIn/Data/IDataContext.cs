@@ -20,7 +20,8 @@ namespace LinkedIn.Data
         public DbSet<UserEducation> UserEducations { get; set; }
         public DbSet<Institution> Institutions { get; set; }
         public DbSet<LicensesAndCertifications> LicensesAndCertifications { get; set; }
-        public DbSet<UserSkills> Skills { get; set; }
+        public DbSet<Skill> Skills { get; set; }
+        public DbSet<UserSkills> UserSkills { get; set; }
         public DbSet<CompanyLocation> CompanyLocations { get; set; }
         public DbSet<UserLocation> UserLocations { get; set; }
 
