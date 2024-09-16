@@ -155,13 +155,10 @@ namespace LinkedIn.Services
                 throw new Exception("User with the given ID was not found!");
             }
 
-            var result = userFromDb.Skills.Find(skill => skill.Name == createRequest.Name);
+            var result = userFromDb.Skills.Find(skill => skill.Name == createRequest.Name && skill.Description == createRequest.Description);
             if(result != null)
             {
-                if(result.Description == createRequest.Description)
-                {
-                    throw new Exception("This skill is already on your profile");
-                }
+                throw new Exception("This skill is already on your profile");
             }
 
             if(companyFromDb == null)
@@ -181,7 +178,7 @@ namespace LinkedIn.Services
             }
 
             if(userFromDb.Skills == null)
-        {
+            {
                 userFromDb.Skills = new List<UserSkills>();  
             }
             
