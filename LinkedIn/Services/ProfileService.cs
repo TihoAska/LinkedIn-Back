@@ -191,6 +191,32 @@ namespace LinkedIn.Services
             return newSkill;
         }
 
+        public async Task<bool> DeleteUserSkill(int userId, string skillName, string skillDescription, CancellationToken cancellationToken)
+        {
+            var userFromDb = await _unitOfWork.Users.GetByIdWithUserDetails(userId, cancellationToken);
+
+            if(userFromDb.Skills != null)
+            {
+                var skillToDelete = userFromDb.Skills.Find(skill => skill.Name == skillName && skill.Description == skillDescription);
+
+                if(skillToDelete != null)
+                {
+                    userFromDb.Skills.Remove(skillToDelete);
+                    await _unitOfWork.SaveChangesAsync();
+
+                    return true;
+                } 
+                else
+                {
+                    throw new Exception("Skill " + skillName  + " " + skillDescription + " was not found!");
+                }
+            }
+            else
+            {
+                throw new Exception("User has no skills");
+            }
+        }
+
         public async Task<IEnumerable<UserEducation>> GetAllEducationsByUserId(int userId, CancellationToken cancellationToken)
         {
             var userFromDb = await _unitOfWork.Users.GetByIdWithUserDetails(userId, cancellationToken);

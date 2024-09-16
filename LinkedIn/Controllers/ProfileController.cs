@@ -204,6 +204,20 @@ namespace LinkedIn.Controllers
             }
         }
 
+        [HttpDelete]
+        public async Task<ActionResult> DeleteUserSkill(int userId, string skillName, string skillDescription, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _profileService.DeleteUserSkill(userId, skillName, skillDescription, cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult> CreateSkill(SkillsCreateRequest createRequest, CancellationToken cancellationToken)
         {
