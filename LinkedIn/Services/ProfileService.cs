@@ -360,13 +360,14 @@ namespace LinkedIn.Services
         {
             var experienceFromDb = await _unitOfWork.Experiences.GetExperienceById(updateRequest.Id, cancellationToken);
             var companyFromDb = await _unitOfWork.Pages.GetByName(updateRequest.CompanyName, cancellationToken);
+            var companyLocationFromDb = await _unitOfWork.CompanyLocations.GetCompanyLocationByCityName(updateRequest.Location.City, cancellationToken);
 
             experienceFromDb.Position = updateRequest.Position;
             experienceFromDb.EmploymentType = updateRequest.EmploymentType;
             experienceFromDb.CompanyId = companyFromDb.Id;
             experienceFromDb.Company = companyFromDb;
             experienceFromDb.CompanyImageUrl = companyFromDb.ImageUrl;
-            experienceFromDb.Location = updateRequest.Location;
+            experienceFromDb.Location = companyLocationFromDb;
             experienceFromDb.LocationType = updateRequest.LocationType;
             experienceFromDb.StartTime = updateRequest.StartDate;
             experienceFromDb.EndTime = updateRequest.EndDate;
