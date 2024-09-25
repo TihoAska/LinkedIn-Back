@@ -347,7 +347,14 @@ namespace LinkedIn.Services
             };
 
             _unitOfWork.Connections.Add(newPendingConnection);
+            try
+            {
             await _unitOfWork.SaveChangesAsync();
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
 
             return newPendingConnection;
         }
