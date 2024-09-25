@@ -20,11 +20,11 @@ namespace LinkedIn.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPendingConnections(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllPendingConnections(int userId, CancellationToken cancellationToken)
         {
             try
             {
-                var result = await _userService.GetAllPendingConnections(id, cancellationToken);
+                var result = await _userService.GetAllPendingConnections(userId, cancellationToken);
                 return Ok(result);
             }
             catch (Exception ex)
