@@ -29,6 +29,8 @@ namespace LinkedIn.Repository
         public async Task<User> GetById(int id, CancellationToken cancellationToken)
         {
             return await _query.Where(user => user.Id == id)
+                .Include(user => user.Education)
+                .Include(user => user.ProfileDetails)
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
