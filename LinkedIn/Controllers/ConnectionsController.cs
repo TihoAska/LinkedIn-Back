@@ -11,10 +11,12 @@ namespace LinkedIn.Controllers
     public class ConnectionsController : ControllerBase
     {
         private IUserService _userService;
+        private WebSocketHandler _websocketHandler;
 
-        public ConnectionsController(IUserService userService)
+        public ConnectionsController(IUserService userService, WebSocketHandler webSocketHandler)
         {
             _userService = userService;
+            _websocketHandler = webSocketHandler;
         }
 
         [HttpGet]
@@ -51,6 +53,8 @@ namespace LinkedIn.Controllers
             try
             {
                 var result = await _userService.SendConnection(senderId, receiverId, cancellationToken);
+                await _websocketHandler.NotifyUserOfNewConnection(receiverId, result);
+
                 return Ok(result);
             }
             catch (Exception ex)

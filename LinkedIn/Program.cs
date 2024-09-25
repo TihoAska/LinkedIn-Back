@@ -11,6 +11,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using LinkedIn.JWTFeatures;
 using System.Text.Json.Serialization;
+using System.Net.WebSockets;
+using LinkedIn.ConnectionWebSocketHandler;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +35,8 @@ builder.Services.AddScoped<IPageService, PageService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<JWTHandler>();
+builder.Services.AddSingleton<WebSocketHandler>();
+builder.Services.AddTransient<JWTHandler>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddDbContext<IDataContext, DataContext>(options =>
@@ -118,6 +122,29 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowFrontend");
+
+app.UseWebSockets();
+app.Use(async (context, next) =>
+{
+    // Check if the request is a WebSocket request
+    if (context.WebSockets.IsWebSocketRequest)
+    {
+        // Handle the WebSocket request at the /notifications endpoint
+        if (context.Request.Path == "/Connections")
+        {
+            var webSocketHandler = app.Services.GetRequiredService<WebSocketHandler>();
+            await webSocketHandler.HandleAsync(context);
+        }
+        else
+        {
+            context.Response.StatusCode = 400;
+        }
+    }
+    else
+    {
+        await next();
+    }
+});
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
