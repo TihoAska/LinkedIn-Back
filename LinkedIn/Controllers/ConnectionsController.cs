@@ -90,5 +90,19 @@ namespace LinkedIn.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete]
+        public async Task<ActionResult> WithdrawSentConnection(int senderId, int receiverId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _userService.WithdrawSentConnection(senderId, receiverId, cancellationToken);
+                return Ok(result);
+            } 
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

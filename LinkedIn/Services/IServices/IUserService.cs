@@ -26,7 +26,7 @@ namespace LinkedIn.Services.IServices
         Task<User> Update(UserUpdateRequest updateRequest, CancellationToken cancellationToken);
         Task<PendingConnections> SendConnection(int senderId, int receiverId, CancellationToken cancellationToken);
         Task<PendingConnections> AcceptConnection(int senderId, int receiverId, CancellationToken cancellationToken);
-        Task<bool> RejectConnection(int senderId, int receiverId, CancellationToken cancellationToken);
+        Task<PendingConnections> WithdrawSentConnection(int senderId, int receiverId, CancellationToken cancellationToken);
         Task<bool> Delete(int id, CancellationToken cancellationToken);
     }
 }

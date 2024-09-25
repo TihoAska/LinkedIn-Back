@@ -415,6 +415,26 @@ namespace LinkedIn.Services
             await _unitOfWork.SaveChangesAsync();
 
             return true;
+
+        public async Task<PendingConnections> WithdrawSentConnection(int senderId, int receiverId, CancellationToken cancellationToken)
+        {
+            var senderFromDb = await _unitOfWork.Users.GetById(senderId, cancellationToken);
+            var receiverFromDb = await _unitOfWork.Users.GetById(receiverId, cancellationToken);
+
+            var pendingConnections = await _unitOfWork.Connections.GetAll(cancellationToken);
+            var pendingConnection = pendingConnections.Where(pc => pc.SenderId == senderId && pc.ReceiverId == receiverId && pc.Status == "Pending").FirstOrDefault();
+
+            if (pendingConnection != null)
+            {
+                _unitOfWork.Connections.Remove(pendingConnection);
+            }
+            else
+            {
+                throw new Exception("No connection found!");
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+            return pendingConnection;
         }
 
         public async Task<User> Update(UserUpdateRequest updateRequest, CancellationToken cancellationToken)
