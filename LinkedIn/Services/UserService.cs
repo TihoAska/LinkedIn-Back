@@ -127,11 +127,14 @@ namespace LinkedIn.Services
             return usersFromDb;
         }
 
-        public async Task<User> GetAllUserConnections(int id, CancellationToken cancellationToken)
+        public async Task<IEnumerable<PendingConnections>> GetAllUserConnections(int id, CancellationToken cancellationToken)
         {
             var userFromDb = await _unitOfWork.Users.GetAllConnections(id, cancellationToken);
+            var connectionsFromDb = await _unitOfWork.Connections.GetAll(cancellationToken);
 
-            return userFromDb;
+            var userConnections = connectionsFromDb.Where(connection => (connection.SenderId == id || connection.ReceiverId == id));
+
+            return userConnections;
         }
 
         public async Task<User> GetAllUserFollowers(int id, CancellationToken cancellationToken)
