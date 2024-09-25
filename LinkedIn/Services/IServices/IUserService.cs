@@ -12,7 +12,7 @@ namespace LinkedIn.Services.IServices
         Task<User> GetByUserName(string userName, CancellationToken cancellationToken);
         Task<User> GetByEmail(string email, CancellationToken cancellationToken);
         Task<User> GetByPhoneNumber(string phoneNumber, CancellationToken cancellationToken);
-        Task<User> GetAllUserConnections(int id, CancellationToken cancellationToken);
+        Task<IEnumerable<PendingConnections>> GetAllUserConnections(int id, CancellationToken cancellationToken);
         Task<User> GetAllUserFollowers(int id, CancellationToken cancellationToken);
         Task<User> GetAllUserFollowing(int id, CancellationToken cancellationToken);
         Task<User> GetAllUserFollowingPages(int id, CancellationToken cancellationToken);
