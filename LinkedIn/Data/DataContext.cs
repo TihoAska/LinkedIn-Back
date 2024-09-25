@@ -37,7 +37,7 @@ namespace LinkedIn.Data
 
             foreach (var entry in entries)
             {
-                Console.WriteLine($"Entity: {entry.Entity.GetType().Name}, State: {entry.State}");
+                //Console.WriteLine($"Entity: {entry.Entity.GetType().Name}, State: {entry.State}");
             }
         }
 
