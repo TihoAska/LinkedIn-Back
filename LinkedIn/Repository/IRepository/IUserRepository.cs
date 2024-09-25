@@ -5,6 +5,7 @@ namespace LinkedIn.Repository.IRepository
 {
     public interface IUserRepository : IGenericRepository<User>
     {
+        Task<IEnumerable<User>> GetAllWithEducations(CancellationToken cancellationToken);
         Task<User> GetById(int id, CancellationToken cancellationToken);
         Task<User> GetByIdWithUserDetails(int id, CancellationToken cancellationToken);
         Task<User> GetByUserName(string userName, CancellationToken cancellationToken);

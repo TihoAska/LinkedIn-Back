@@ -14,6 +14,13 @@ namespace LinkedIn.Repository
             
         }
 
+        public async Task<IEnumerable<User>> GetAllWithEducations(CancellationToken cancellationToken)
+        {
+            return await _query
+                .Include(user => user.Education)
+                .Include(user => user.ProfileDetails)
+                .ToListAsync(cancellationToken);
+        }
         public async Task<User> GetByEmail(string email, CancellationToken cancellationToken)
         {
             return await _query.Where(user => user.Email == email).FirstOrDefaultAsync(cancellationToken);

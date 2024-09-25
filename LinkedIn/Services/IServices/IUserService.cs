@@ -6,6 +6,7 @@ namespace LinkedIn.Services.IServices
     public interface IUserService
     {
         Task<IEnumerable<User>> GetAll(CancellationToken cancellationToken);
+        Task<IEnumerable<User>> GetAllWithEducations(CancellationToken cancellationToken);
         Task<User> GetById(int id, CancellationToken cancellationToken);
         Task<User> GetByIdWithUserDetails(int id, CancellationToken cancellationToken);
         Task<User> GetByUserName(string userName, CancellationToken cancellationToken);

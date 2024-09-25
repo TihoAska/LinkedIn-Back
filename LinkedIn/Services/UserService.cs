@@ -29,6 +29,17 @@ namespace LinkedIn.Services
             _jwtHandler = jwtHandler;
         }
 
+        public async Task<IEnumerable<User>> GetAllWithEducations(CancellationToken cancellationToken)
+        {
+            var usersFromDb = await _unitOfWork.Users.GetAllWithEducations(cancellationToken);
+
+            if(usersFromDb == null) {
+                return [];
+            }
+
+            return usersFromDb;
+        }
+
         public async Task<AuthResponse> Create(UserCreateRequest createRequest, CancellationToken cancellationToken)
         {
             var existingUser = await _unitOfWork.Users.GetByEmail(createRequest.Email, cancellationToken);
