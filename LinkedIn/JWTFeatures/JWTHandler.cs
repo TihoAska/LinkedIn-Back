@@ -13,8 +13,7 @@ namespace LinkedIn.JWTFeatures
         private readonly IConfigurationSection _jwtSettings;
 
         public JWTHandler(
-            IConfiguration configuration,
-            IUnitOfWork unitOfWork)
+            IConfiguration configuration)
         {
             _configuration = configuration;
             _jwtSettings = _configuration.GetSection("JWT");
@@ -71,5 +70,46 @@ namespace LinkedIn.JWTFeatures
 
             return refreshToken;
         }
+
+        public ClaimsPrincipal DecodeJwtToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(_jwtSettings.GetSection("Secret").Value);
+
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = false, // Check if the token has expired
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = _jwtSettings["ValidIssuer"],
+                ValidAudience = _jwtSettings["ValidAudience"],
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ClockSkew = TimeSpan.Zero // Optional: reduce clock skew to minimize delay in token expiration validation
+            };
+
+            try
+            {
+                // Validate the token and get the claims principal
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
+
+                // Additional validation if necessary
+                if (validatedToken is JwtSecurityToken jwtToken && jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return principal; // The token is valid, return the claims principal
+                }
+                else
+                {
+                    throw new SecurityTokenException("Invalid token");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any validation failure
+                throw new SecurityTokenException("Token validation failed", ex);
+            }
+        }
     }
+
+    
 }
