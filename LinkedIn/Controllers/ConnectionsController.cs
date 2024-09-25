@@ -48,6 +48,20 @@ namespace LinkedIn.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetAllAcceptedConnectionsForUser(int userId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _userService.GetAllAcceptedConnections(userId, cancellationToken);
+                return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> SendConnection(int senderId, int receiverId, CancellationToken cancellationToken)
         {

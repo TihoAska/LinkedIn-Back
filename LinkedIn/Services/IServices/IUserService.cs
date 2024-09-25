@@ -22,6 +22,7 @@ namespace LinkedIn.Services.IServices
         Task<IEnumerable<User>> GetFiveOtherSimilarProfiles(int id, CancellationToken cancellationToken);
         Task<IEnumerable<User>> GetFiveUsers(CancellationToken cancellationToken);
         Task<IEnumerable<PendingConnections>> GetAllPendingConnections(int id, CancellationToken cancellationToken);
+        Task<IEnumerable<PendingConnections>> GetAllAcceptedConnections(int userId, CancellationToken cancellationToken);
         Task<AuthResponse> Create(UserCreateRequest createRequest, CancellationToken cancellationToken);
         Task<AuthResponse> Login(UserLoginRequest loginRequest, CancellationToken cancellationToken);
         Task<User> Update(UserUpdateRequest updateRequest, CancellationToken cancellationToken);

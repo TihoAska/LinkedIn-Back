@@ -376,6 +376,13 @@ namespace LinkedIn.Services
             return pendingConnections;
         }
 
+        public async Task<IEnumerable<PendingConnections>> GetAllAcceptedConnections(int userId, CancellationToken cancellationToken)
+        {
+            var acceptedConnections = await _unitOfWork.Connections.GetAllAcceptedConnectionsWithSenderAndReceiver(userId, cancellationToken);
+
+            return acceptedConnections;
+        }
+
         public async Task<PendingConnections> AcceptConnection(int senderId, int receiverId, CancellationToken cancellationToken)
         {
             var senderFromDb = await _unitOfWork.Users.GetById(senderId, cancellationToken);
