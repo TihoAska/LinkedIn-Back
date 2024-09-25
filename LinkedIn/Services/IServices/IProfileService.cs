@@ -1,5 +1,6 @@
 ﻿using LinkedIn.Models.ProfileDetails.Educations;
 using LinkedIn.Models.ProfileDetails.Experiences;
+using LinkedIn.Models.ProfileDetails.Images;
 using LinkedIn.Models.ProfileDetails.Languages;
 using LinkedIn.Models.ProfileDetails.LicensesAndCerfitications;
 using LinkedIn.Models.ProfileDetails.Locations;
@@ -28,5 +29,6 @@ namespace LinkedIn.Services.IServices
         Task<UserEducation> EditEducationForUser(EducationUpdateRequest updateRequest, CancellationToken cancellationToken);
         Task<LicensesAndCertifications> EditLicenseOrCertificationForUser(LicenseUpdateRequest updateRequest, CancellationToken cancellationToken);
         Task<UserLanguages> EditLanguage(LanguagesUpdateRequest updateRequest, CancellationToken cancellationToken);
+        Task<BackgroundImage> ChangeBackgroundImage(BackgroundImageUpdateRequest updateRequest, CancellationToken cancellationToken);
     }
 }

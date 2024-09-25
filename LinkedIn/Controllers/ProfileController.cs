@@ -1,5 +1,6 @@
 ﻿using LinkedIn.Models.ProfileDetails.Educations;
 using LinkedIn.Models.ProfileDetails.Experiences;
+using LinkedIn.Models.ProfileDetails.Images;
 using LinkedIn.Models.ProfileDetails.Languages;
 using LinkedIn.Models.ProfileDetails.LicensesAndCerfitications;
 using LinkedIn.Models.ProfileDetails.Skills;
@@ -269,6 +270,20 @@ namespace LinkedIn.Controllers
                 return Ok(result);
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> ChangeBackgroundImage(BackgroundImageUpdateRequest updateRequest, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _profileService.ChangeBackgroundImage(updateRequest, cancellationToken);
+                return Ok(result);
+            }
+            catch(Exception ex)
             {
                 return BadRequest(ex);
             }

@@ -3,6 +3,7 @@ using LinkedIn.Data;
 using LinkedIn.Models.Pages;
 using LinkedIn.Models.ProfileDetails.Educations;
 using LinkedIn.Models.ProfileDetails.Experiences;
+using LinkedIn.Models.ProfileDetails.Images;
 using LinkedIn.Models.ProfileDetails.Languages;
 using LinkedIn.Models.ProfileDetails.LicensesAndCerfitications;
 using LinkedIn.Models.ProfileDetails.Locations;
@@ -17,11 +18,15 @@ namespace LinkedIn.Services
     {
         private IUnitOfWork _unitOfWork;
         private IMapper _autoMapper;
+        private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public ProfileService(IUnitOfWork unitOfWork, IMapper autoMapper)
+        public ProfileService(IUnitOfWork unitOfWork, IMapper autoMapper, IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             _unitOfWork = unitOfWork;
             _autoMapper = autoMapper;
+            _configuration = configuration;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public async Task<UserEducation> CreateEducationForUser(EducationCreateRequest createRequest, CancellationToken cancellationToken)
@@ -411,6 +416,50 @@ namespace LinkedIn.Services
             await _unitOfWork.SaveChangesAsync();
 
             return languageFromDb;
+        }
+
+        public async Task<BackgroundImage> ChangeBackgroundImage(BackgroundImageUpdateRequest updateRequest, CancellationToken cancellationToken)
+        {
+            var userFromDb = await _unitOfWork.Users.GetByIdWithUserDetails(updateRequest.UserId, cancellationToken);
+
+            if (userFromDb == null)
+            {
+                throw new Exception("User with the ID " + updateRequest.UserId + " was not found!");
+            }
+
+            if (string.IsNullOrEmpty(updateRequest.ImageData))
+            {
+                userFromDb.ProfileDetails.BannerImage = "/assets/profileMisc/timeline.png";
+            }
+            else
+            {
+                var oldImagePath = Path.Combine(_hostingEnvironment.WebRootPath, userFromDb.ProfileDetails.BannerImage.TrimStart('/'));
+
+                if (File.Exists(oldImagePath) && userFromDb.ProfileDetails.BannerImage != "timeline.png")
+                {
+                    File.Delete(oldImagePath);
+                }
+
+                var base64Data = updateRequest.ImageData.Substring(updateRequest.ImageData.IndexOf(",") + 1);
+                var imageBytes = Convert.FromBase64String(base64Data);
+
+                var guid = Guid.NewGuid();
+
+                var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "assets/profileMisc", $"image_{guid}.jpg");
+
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+                File.WriteAllBytes(filePath, imageBytes);
+
+                userFromDb.ProfileDetails.BannerImage = "/assets/profileMisc/" + $"image_{guid}.jpg";
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return new BackgroundImage
+            {
+                UserId = userFromDb.Id,
+                ImageUrl = userFromDb.ProfileDetails.BannerImage,
+            };
         }
     }
 }

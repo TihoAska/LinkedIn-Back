@@ -13,5 +13,6 @@ namespace LinkedIn.Models.Users
         public int ProfileViews { get; set; }
         public int PostImpressions { get; set; }
         public int SearchAppearances { get; set; }
+        public string BannerImage { get; set; } = "/assets/profileMisc/timeline.png";
     }
 }
