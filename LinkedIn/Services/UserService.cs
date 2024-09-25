@@ -419,7 +419,7 @@ namespace LinkedIn.Services
             return pendingConnection;
         }
 
-        public async Task<bool> RejectConnection(int senderId, int receiverId, CancellationToken cancellationToken)
+        public async Task<PendingConnections> RejectConnection(int senderId, int receiverId, CancellationToken cancellationToken)
         {
             var senderFromDb = await _unitOfWork.Users.GetById(senderId, cancellationToken);
             var receiverFromDb = await _unitOfWork.Users.GetById(receiverId, cancellationToken);
@@ -435,7 +435,8 @@ namespace LinkedIn.Services
             _unitOfWork.Connections.Remove(pendingConnection);
             await _unitOfWork.SaveChangesAsync();
 
-            return true;
+            return pendingConnection;
+        }
 
         public async Task<PendingConnections> WithdrawSentConnection(int senderId, int receiverId, CancellationToken cancellationToken)
         {
