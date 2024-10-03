@@ -68,7 +68,7 @@ namespace LinkedIn.Controllers
             try
             {
                 var result = await _userService.SendConnection(senderId, receiverId, cancellationToken);
-                await _websocketHandler.NotifyUserOfNewConnection(receiverId, result);
+                await _websocketHandler.NotifyUserOfNewEvent(receiverId, result, "connection");
 
                 return Ok(result);
             }
