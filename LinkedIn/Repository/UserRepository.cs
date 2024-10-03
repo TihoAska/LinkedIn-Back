@@ -21,6 +21,7 @@ namespace LinkedIn.Repository
                 .Include(user => user.ProfileDetails)
                 .ToListAsync(cancellationToken);
         }
+
         public async Task<User> GetByEmail(string email, CancellationToken cancellationToken)
         {
             return await _query.Where(user => user.Email == email).FirstOrDefaultAsync(cancellationToken);
@@ -69,7 +70,6 @@ namespace LinkedIn.Repository
         public async Task<User> GetAllConnections(int id, CancellationToken cancellationToken)
         {
             return await _query.Where(user => user.Id == id)
-                .Include(user => user.Connections)
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
