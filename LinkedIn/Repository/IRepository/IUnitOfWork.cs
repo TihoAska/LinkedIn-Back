@@ -12,6 +12,7 @@
         ICompanyLocationsRepository CompanyLocations { get; }
         ILanguageRepository Languages { get; }
         ISkillRepository Skills { get; }
+        IMessagesRepository Messages { get; }
         Task<int> SaveChangesAsync();
     }
 }
