@@ -47,7 +47,7 @@ namespace LinkedIn.ConnectionWebSocketHandler
             }
         }
 
-        public async Task NotifyUserOfNewConnection(int userId, object newConnectionData)
+        public async Task NotifyUserOfNewEvent(int userId, object newConnectionData, string eventType)
         {
             if (UserWebSockets.TryGetValue(userId, out var socket))
             {
@@ -59,7 +59,13 @@ namespace LinkedIn.ConnectionWebSocketHandler
                         WriteIndented = true,
                     };
 
-                    var message = JsonSerializer.Serialize(newConnectionData, options);
+                    var eventData = new
+                    {
+                        EventType = eventType,
+                        Data = newConnectionData
+                    };
+
+                    var message = JsonSerializer.Serialize(eventData, options);
                     var bytes = Encoding.UTF8.GetBytes(message);
                     await socket.SendAsync(new ArraySegment<byte>(bytes), WebSocketMessageType.Text, true, CancellationToken.None);
                 }
