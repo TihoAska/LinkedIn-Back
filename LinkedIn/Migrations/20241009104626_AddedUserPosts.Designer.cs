@@ -3,6 +3,7 @@ using System;
 using LinkedIn.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LinkedIn.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241009104626_AddedUserPosts")]
+    partial class AddedUserPosts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,14 +94,9 @@ namespace LinkedIn.Migrations
                     b.Property<DateTime>("TimeCommented")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("PostComments");
                 });
@@ -142,10 +140,6 @@ namespace LinkedIn.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("IconUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -167,9 +161,6 @@ namespace LinkedIn.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsEdited")
-                        .HasColumnType("boolean");
-
                     b.Property<int>("NumberOfComments")
                         .HasColumnType("integer");
 
@@ -183,12 +174,7 @@ namespace LinkedIn.Migrations
                     b.Property<int>("PosterId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("TimePosted")
-                        .HasColumnType("timestamp with time zone");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("PosterId");
 
                     b.ToTable("Posts");
                 });
@@ -781,14 +767,6 @@ namespace LinkedIn.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LinkedIn.Models.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-
                     b.Navigation("UserPost");
                 });
 
@@ -815,17 +793,6 @@ namespace LinkedIn.Migrations
                     b.Navigation("User");
 
                     b.Navigation("UserPost");
-                });
-
-            modelBuilder.Entity("LinkedIn.Models.Posts.UserPost", b =>
-                {
-                    b.HasOne("LinkedIn.Models.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("PosterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LinkedIn.Models.ProfileDetails.Educations.UserEducation", b =>
