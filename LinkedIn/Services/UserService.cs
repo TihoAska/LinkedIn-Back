@@ -177,10 +177,17 @@ namespace LinkedIn.Services
             var connections = await _unitOfWork.Connections.GetAllConnectionsWithSenderAndReceiver(id, cancellationToken);
             var pagesFollowing = await _unitOfWork.Pages.GetAllForUser(id, cancellationToken);
 
-            userFromDb.Connections = new List<User>();
-            userFromDb.PagesFollowing = new List<Page>();
-            userFromDb?.Education?.OrderByDescending(x => x.StartTime);
+            if(userFromDb.Connections == null)
+            {
+                userFromDb.Connections = new List<User>();
+            }
 
+            if(userFromDb.PagesFollowing == null)
+            {
+                userFromDb.PagesFollowing = new List<Page>();
+            }
+
+            userFromDb?.Education?.OrderByDescending(x => x.StartTime);
             userFromDb.PagesFollowing.AddRange(pagesFollowing);
 
             foreach (var connection in connections)

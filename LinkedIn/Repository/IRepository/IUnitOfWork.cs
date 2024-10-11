@@ -13,6 +13,11 @@
         ILanguageRepository Languages { get; }
         ISkillRepository Skills { get; }
         IMessagesRepository Messages { get; }
+        IUserPostRepository UserPosts { get; }
+        IReactionsRepository Reactions { get; }
+        IReactionTypesRepository ReactionTypes { get; }
+        ICommentsRepository Comments { get; }
+
         Task<int> SaveChangesAsync();
     }
 }

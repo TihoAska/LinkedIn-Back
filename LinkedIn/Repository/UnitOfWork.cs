@@ -18,6 +18,10 @@ namespace LinkedIn.Repository
         public ILanguageRepository Languages { get; private set; }
         public ISkillRepository Skills { get; private set; }
         public IMessagesRepository Messages { get; private set; }
+        public IUserPostRepository UserPosts { get; private set; }
+        public IReactionsRepository Reactions { get; private set; }
+        public IReactionTypesRepository ReactionTypes { get; private set; }
+        public ICommentsRepository Comments { get; private set; }
 
         public UnitOfWork(IDataContext dataContext)
         {
@@ -33,6 +37,10 @@ namespace LinkedIn.Repository
             Languages = new LanguageRepository(_context);
             Skills = new SkillRepository(_context);
             Messages = new MessagesRepository(_context);
+            UserPosts = new UserPostRepository(_context);
+            Reactions = new ReactionsRepository(_context);
+            ReactionTypes = new ReactionTypesRepository(_context);
+            Comments = new CommentsRepository(_context);
         }
 
         public async Task<int> SaveChangesAsync()

@@ -1,5 +1,6 @@
 ﻿using LinkedIn.Models.Messages;
 using LinkedIn.Models.Pages;
+using LinkedIn.Models.Posts;
 using LinkedIn.Models.ProfileDetails.Educations;
 using LinkedIn.Models.ProfileDetails.Experiences;
 using LinkedIn.Models.ProfileDetails.LicensesAndCerfitications;
@@ -26,6 +27,10 @@ namespace LinkedIn.Data
         public DbSet<CompanyLocation> CompanyLocations { get; set; }
         public DbSet<UserLocation> UserLocations { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<UserPost> Posts { get; set; }
+        public DbSet<Comment> PostComments { get; set; }
+        public DbSet<Reaction> PostReactions { get; set; }
+        public DbSet<ReactionType> ReactionTypes { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
