@@ -78,7 +78,7 @@ namespace LinkedIn.Controllers
             }
         }
 
-        [HttpPut] 
+        [HttpPost] 
         public async Task<ActionResult> ReactOnPost(PostReactionModel reactionModel, CancellationToken cancellationToken)
         {
             try
@@ -87,6 +87,34 @@ namespace LinkedIn.Controllers
                 return Ok(result);
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CommentOnPost(CommentCreateRequest createRequest, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _postsService.CommentOnPost(createRequest, cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ReactOnComment(CommentReactionCreateRequest createRequest, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _postsService.ReactOnComment(createRequest, cancellationToken);
+                return Ok(result);
+            }
+            catch(Exception ex) 
             {
                 return BadRequest(ex.Message);
             }

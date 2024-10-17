@@ -3,6 +3,7 @@ using System;
 using LinkedIn.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LinkedIn.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241015141850_AddedCommentReactions")]
+    partial class AddedCommentReactions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,12 +124,6 @@ namespace LinkedIn.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CommentId");
-
-                    b.HasIndex("ReactionTypeId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("CommentReactions");
                 });
@@ -818,33 +815,6 @@ namespace LinkedIn.Migrations
                     b.Navigation("User");
 
                     b.Navigation("UserPost");
-                });
-
-            modelBuilder.Entity("LinkedIn.Models.Posts.CommentReactions", b =>
-                {
-                    b.HasOne("LinkedIn.Models.Posts.Comment", "Comment")
-                        .WithMany()
-                        .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LinkedIn.Models.Posts.ReactionType", "ReactionType")
-                        .WithMany()
-                        .HasForeignKey("ReactionTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LinkedIn.Models.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Comment");
-
-                    b.Navigation("ReactionType");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LinkedIn.Models.Posts.Reaction", b =>

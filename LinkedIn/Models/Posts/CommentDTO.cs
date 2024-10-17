@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LinkedIn.Models.Posts
 {
-    public class Comment
+    public class CommentDTO
     {
         public int Id { get; set; }
         public int PostId { get; set; }
@@ -11,11 +11,8 @@ namespace LinkedIn.Models.Posts
         [ForeignKey("PostId")]
         public UserPost UserPost { get; set; }
         public int UserId { get; set; }
-
-        [ForeignKey("UserId")]
-        public User User { get; set; }
+        public UserDTO User { get; set; }
         public string Content { get; set; }
         public DateTime TimeCommented { get; set; }
-        public List<CommentReactions> Reactions { get; set; }
     }
 }

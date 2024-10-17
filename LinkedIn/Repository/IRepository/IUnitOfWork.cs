@@ -17,6 +17,7 @@
         IReactionsRepository Reactions { get; }
         IReactionTypesRepository ReactionTypes { get; }
         ICommentsRepository Comments { get; }
+        ICommentReactionsRepository CommentReactions { get; }
 
         Task<int> SaveChangesAsync();
     }

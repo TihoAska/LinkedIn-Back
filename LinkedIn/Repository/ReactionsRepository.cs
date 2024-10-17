@@ -19,5 +19,12 @@ namespace LinkedIn.Repository
                 .Include(reaction => reaction.Type)
                 .ToListAsync(cancellationToken);
         }
+
+        public async Task<IEnumerable<Reaction>> GetAllWithType(CancellationToken cancellationToken)
+        {
+            return await _query
+                .Include(reaction => reaction.Type)
+                .ToListAsync(cancellationToken);
+        }
     }
 }

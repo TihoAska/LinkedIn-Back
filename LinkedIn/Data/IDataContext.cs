@@ -31,6 +31,7 @@ namespace LinkedIn.Data
         public DbSet<Comment> PostComments { get; set; }
         public DbSet<Reaction> PostReactions { get; set; }
         public DbSet<ReactionType> ReactionTypes { get; set; }
+        public DbSet<CommentReactions> CommentReactions { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
         DbSet<TEntity> Set<TEntity>() where TEntity : class;

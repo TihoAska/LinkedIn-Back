@@ -22,6 +22,7 @@ namespace LinkedIn.Repository
         public IReactionsRepository Reactions { get; private set; }
         public IReactionTypesRepository ReactionTypes { get; private set; }
         public ICommentsRepository Comments { get; private set; }
+        public ICommentReactionsRepository CommentReactions { get; }
 
         public UnitOfWork(IDataContext dataContext)
         {
@@ -41,6 +42,7 @@ namespace LinkedIn.Repository
             Reactions = new ReactionsRepository(_context);
             ReactionTypes = new ReactionTypesRepository(_context);
             Comments = new CommentsRepository(_context);
+            CommentReactions = new CommentReactionRepository(_context);
         }
 
         public async Task<int> SaveChangesAsync()

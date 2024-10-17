@@ -6,5 +6,6 @@ namespace LinkedIn.Repository.IRepository
     {
         Task<UserPost> GetById(int id, CancellationToken cancellationToken);
         Task<IEnumerable<UserPost>> GetAllForUser(int userId, CancellationToken cancellationToken);
+        Task<IEnumerable<UserPost>> GetAllWithUser(CancellationToken cancellationToken);
     }
 }

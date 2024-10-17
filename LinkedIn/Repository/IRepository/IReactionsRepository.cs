@@ -5,5 +5,6 @@ namespace LinkedIn.Repository.IRepository
     public interface IReactionsRepository : IGenericRepository<Reaction>
     {
         Task<IEnumerable<Reaction>> GetReactionsForUserPost(int userPostId, CancellationToken cancellationToken);
+        Task<IEnumerable<Reaction>> GetAllWithType(CancellationToken cancellationToken);
     }
 }

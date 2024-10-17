@@ -11,6 +11,7 @@ namespace LinkedIn.Services.IServices
         Task<UserPost> Update(PostUpdateRequest updateRequest, CancellationToken cancellationToken);
         Task<UserPost> ReactOnPost(PostReactionModel reactionModel, CancellationToken cancellationToken);
         Task<bool> Delete(int postId, CancellationToken cancellationToken);
-
+        Task<Comment> CommentOnPost(CommentCreateRequest createRequest, CancellationToken cancellationToken);
+        Task<CommentReactions> ReactOnComment(CommentReactionCreateRequest createReqeust, CancellationToken cancellationToken);
     }
 }

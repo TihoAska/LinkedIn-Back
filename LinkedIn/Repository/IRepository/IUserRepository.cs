@@ -1,4 +1,5 @@
-﻿using LinkedIn.Models.Users;
+﻿using LinkedIn.Models.Posts;
+using LinkedIn.Models.Users;
 using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace LinkedIn.Repository.IRepository
@@ -16,6 +17,6 @@ namespace LinkedIn.Repository.IRepository
         Task<User> GetAllFollowing(int id, CancellationToken cancellationToken);
         Task<User> GetAllPages(int id, CancellationToken cancellationToken);
         Task<User> GetByIdWithAllConnectionsAndPages(int id, CancellationToken cancellationToken);
-        Task<IEnumerable<User>> GetFiveUsers(CancellationToken cancellationToken);   
+        Task<IEnumerable<User>> GetFiveUsers(CancellationToken cancellationToken);
     }
 }

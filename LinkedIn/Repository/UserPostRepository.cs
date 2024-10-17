@@ -25,5 +25,12 @@ namespace LinkedIn.Repository
                     .ThenInclude(reaction => reaction.User)
                 .ToListAsync(cancellationToken);
         }
+
+        public async Task<IEnumerable<UserPost>> GetAllWithUser(CancellationToken cancellationToken)
+        {
+            return await _query
+                .Include(userPost => userPost.User)
+                .ToListAsync(cancellationToken);
+        }
     }
 }
