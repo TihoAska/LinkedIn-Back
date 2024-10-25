@@ -254,6 +254,48 @@ namespace LinkedIn.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult> Refresh(RefreshTokenRequest refreshToken, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _userService.Refresh(refreshToken, cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RequestPasswordResetToken(int userId)
+        {
+            try
+            {
+                var result = await _userService.RequestPasswordResetToken(userId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ResetPassword(ResetPasswordRequest resetPasswordRequest)
+        {
+            try
+            {
+                var result = await _userService.ResetPassword(resetPasswordRequest);
+                return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPut]
         public async Task<ActionResult> Update(UserUpdateRequest updateRequest, CancellationToken cancellationToken)
         {
