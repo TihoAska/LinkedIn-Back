@@ -65,6 +65,20 @@ namespace LinkedIn.Controllers
             }
         }
 
+        [HttpDelete]
+        public async Task<ActionResult> DeleteExperienceForUser(int experienceId, int userId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _profileService.DeleteExperienceForUser(experienceId, userId, cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetAllInstitutions(CancellationToken cancellationToken)
         {
@@ -121,6 +135,20 @@ namespace LinkedIn.Controllers
             }
         }
 
+        [HttpDelete]
+        public async Task<ActionResult> DeleteEducationForUser(int educationId, int userId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _profileService.DeleteEducationForUser(educationId, userId, cancellationToken);
+                return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpGet]
         public async Task<ActionResult> GetAllLicensesAndCertificationsByUserId(int id, CancellationToken cancellationToken)
         {
@@ -158,6 +186,20 @@ namespace LinkedIn.Controllers
                 return Ok(result);
             }
             catch(Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteLicenseForUser(int userId, int licenseId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _profileService.DeleteLicenseForUser(userId, licenseId, cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex);
             }
@@ -267,6 +309,20 @@ namespace LinkedIn.Controllers
             try
             {
                 var result = await _profileService.EditLanguage(updateRequest, cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteLanguageForUser(int userId, int languageId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _profileService.DeleteLanguageForUser(userId, languageId, cancellationToken);
                 return Ok(result);
             }
             catch (Exception ex)

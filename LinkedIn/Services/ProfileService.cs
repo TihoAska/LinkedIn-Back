@@ -10,7 +10,9 @@ using LinkedIn.Models.ProfileDetails.Locations;
 using LinkedIn.Models.ProfileDetails.Skills;
 using LinkedIn.Repository.IRepository;
 using LinkedIn.Services.IServices;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.OpenApi.Validations;
 
 namespace LinkedIn.Services
 {
@@ -71,6 +73,29 @@ namespace LinkedIn.Services
             return newEducation;
         }
 
+        public async Task<bool> DeleteEducationForUser(int educationId, int userId, CancellationToken cancellationToken)
+        {
+            var userFromDb = await _unitOfWork.Users.GetByIdWithUserDetails(userId, cancellationToken);
+
+            if (userFromDb.Education == null)
+            {
+                throw new Exception("User has no educations!");
+            }
+
+            var userEducation = userFromDb.Education.Find(education => education.Id == educationId);
+
+            if(userEducation == null)
+            {
+                throw new Exception("User has no specified education");
+            }
+
+            userFromDb.Education.Remove(userEducation);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<Experience> CreateExperienceForUser(ExperienceCreateRequest createRequest, CancellationToken cancellationToken)
         {
             var userFromDb = await _unitOfWork.Users.GetByIdWithUserDetails(createRequest.UserId, cancellationToken);
@@ -99,6 +124,34 @@ namespace LinkedIn.Services
 
             return newExperience;
         }
+        public async Task<bool> DeleteExperienceForUser(int experienceId, int userId, CancellationToken cancellationToken)
+        {
+            var userFromDb = await _unitOfWork.Users.GetByIdWithUserDetails(userId, cancellationToken);
+
+            if(userFromDb == null)
+            {
+                throw new Exception("User with the given id was not found!");
+            }
+
+            if(userFromDb.Experience == null)
+            {
+                throw new Exception("User has no experience");
+            }
+
+            var userExperience = userFromDb.Experience.Find(experience => experience.Id == experienceId);
+
+            if(userExperience == null )
+            {
+                throw new Exception("User has no specified experience");
+            }
+
+            userFromDb.Experience.Remove(userExperience);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
+        }
+
 
         public async Task<IEnumerable<Institution>> GetAllInstitutions(CancellationToken cancellationToken)
         {
@@ -137,6 +190,29 @@ namespace LinkedIn.Services
             }
 
             return skillsFromDb;
+        }
+
+        public async Task<bool> DeleteLicenseForUser(int userId, int licenseId, CancellationToken cancellationToken)
+        {
+            var userFromDb = await _unitOfWork.Users.GetByIdWithUserDetails(userId, cancellationToken) ?? throw new Exception("User was not found!");
+            
+            if(userFromDb.LicensesAndCertifications == null)
+            {
+                throw new Exception("User has no licenses");
+            }
+
+            var licenseToRemove = userFromDb.LicensesAndCertifications.Find(license => license.Id == licenseId);
+
+            if(licenseToRemove == null)
+            {
+                throw new Exception("User has no specified license!");
+            }
+
+            userFromDb.LicensesAndCertifications.Remove(licenseToRemove);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<Skill> CreateSkill(SkillsCreateRequest createRequest, CancellationToken cancellationToken)
@@ -416,6 +492,29 @@ namespace LinkedIn.Services
             await _unitOfWork.SaveChangesAsync();
 
             return languageFromDb;
+        }
+
+        public async Task<bool> DeleteLanguageForUser(int userId, int languageId, CancellationToken cancellationToken)
+        {
+            var userFromDb = await _unitOfWork.Users.GetByIdWithUserDetails(userId, cancellationToken);
+
+            if(userFromDb.Languages == null)
+            {
+                throw new Exception("User has no languages!");
+            }
+
+            var userLanguage = userFromDb.Languages.Where(language => language.Id == languageId).FirstOrDefault();
+
+            if(userLanguage == null)
+            {
+                throw new Exception("User has no language with the id " + languageId);
+            }
+
+            userFromDb.Languages.Remove(userLanguage);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<BackgroundImage> ChangeBackgroundImage(BackgroundImageUpdateRequest updateRequest, CancellationToken cancellationToken)

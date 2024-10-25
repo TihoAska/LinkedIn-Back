@@ -30,5 +30,9 @@ namespace LinkedIn.Services.IServices
         Task<LicensesAndCertifications> EditLicenseOrCertificationForUser(LicenseUpdateRequest updateRequest, CancellationToken cancellationToken);
         Task<UserLanguages> EditLanguage(LanguagesUpdateRequest updateRequest, CancellationToken cancellationToken);
         Task<BackgroundImage> ChangeBackgroundImage(BackgroundImageUpdateRequest updateRequest, CancellationToken cancellationToken);
+        Task<bool> DeleteLanguageForUser(int userId, int languageId, CancellationToken cancellationToken);
+        Task<bool> DeleteEducationForUser(int educationId, int userId, CancellationToken cancellationToken);
+        Task<bool> DeleteExperienceForUser(int experienceId, int userId, CancellationToken cancellationToken);
+        Task<bool> DeleteLicenseForUser(int userId, int licenseId, CancellationToken cancellationToken);
     }
 }
