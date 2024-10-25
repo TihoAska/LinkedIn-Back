@@ -18,5 +18,6 @@ namespace LinkedIn.Repository.IRepository
         Task<User> GetAllPages(int id, CancellationToken cancellationToken);
         Task<User> GetByIdWithAllConnectionsAndPages(int id, CancellationToken cancellationToken);
         Task<IEnumerable<User>> GetFiveUsers(CancellationToken cancellationToken);
+        Task<User> GetByRefreshToken(string refreshToken, CancellationToken cancellationToken);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using LinkedIn.Models.Account;
 using LinkedIn.Models.Users;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LinkedIn.Services.IServices
 {
@@ -31,5 +33,8 @@ namespace LinkedIn.Services.IServices
         Task<PendingConnections> WithdrawSentConnection(int senderId, int receiverId, CancellationToken cancellationToken);
         Task<PendingConnections> RejectConnection(int senderId, int receiverId, CancellationToken cancellationToken);
         Task<bool> Delete(int id, CancellationToken cancellationToken);
+        Task<AuthResponse> Refresh(RefreshTokenRequest refreshToken, CancellationToken cancellationToken);
+        Task<IdentityResult> ResetPassword(ResetPasswordRequest resetRequest);
+        Task<string> RequestPasswordResetToken(int userId);
     }
 }

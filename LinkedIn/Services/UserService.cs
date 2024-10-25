@@ -7,6 +7,8 @@ using LinkedIn.Services.IServices;
 using Microsoft.AspNetCore.Identity;
 using LinkedIn.Models.Account;
 using LinkedIn.Models.Pages;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace LinkedIn.Services
 {
@@ -51,13 +53,13 @@ namespace LinkedIn.Services
 
             var newUser = _autoMapper.Map<User>(createRequest);
             newUser.UserName = createRequest.FirstName + createRequest.LastName + Guid.NewGuid();
+            newUser.ProfileDetails = new ProfileDetails();
 
             var result = await _userManager.CreateAsync(newUser, createRequest.Password);
 
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description);
-
                 throw new Exception(string.Join(",", errors));
             }
 
@@ -400,6 +402,24 @@ namespace LinkedIn.Services
             return acceptedConnections;
         }
 
+        public async Task<AuthResponse> Refresh(RefreshTokenRequest refreshToken, CancellationToken cancellationToken)
+        {
+            var userFromDb = await _unitOfWork.Users.GetByRefreshToken(refreshToken.RefreshToken, cancellationToken);
+
+            if (userFromDb == null)
+            {
+                throw new Exception("User was not found!");
+            }
+
+            var token = _jwtHandler.GenerateJWTToken(userFromDb);
+
+            userFromDb.LastLogin = DateTime.UtcNow.ToUniversalTime();
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return new AuthResponse { IsAuthSuccessful = true, AccessToken = token, RefreshToken = userFromDb.RefreshToken };
+        }
+
         public async Task<PendingConnections> AcceptConnection(int senderId, int receiverId, CancellationToken cancellationToken)
         {
             var senderFromDb = await _unitOfWork.Users.GetById(senderId, cancellationToken);
@@ -487,6 +507,34 @@ namespace LinkedIn.Services
             await _unitOfWork.SaveChangesAsync();
 
             return userFromDb;
+        }
+
+        public async Task<string> RequestPasswordResetToken(int userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if(user == null)
+            {
+                throw new Exception("User with the given email was not found!");
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            return token;
+        }
+
+        public async Task<IdentityResult> ResetPassword(ResetPasswordRequest resetRequest)
+        {
+            var user = await _userManager.FindByIdAsync(resetRequest.UserId);
+
+            if (user == null)
+            {
+                throw new Exception("User with the given id was not found!");
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, resetRequest.Token, resetRequest.NewPassword);
+
+            return result;
         }
     }
 }

@@ -98,5 +98,10 @@ namespace LinkedIn.Repository
         {
             return await _query.OrderBy(x => Guid.NewGuid()).Take(5).ToListAsync(cancellationToken);
         }
+
+        public async Task<User> GetByRefreshToken(string refreshToken, CancellationToken cancellationToken)
+        {
+            return await _query.Where(user => user.RefreshToken == refreshToken).FirstOrDefaultAsync(cancellationToken);
+        }
     }
 }
