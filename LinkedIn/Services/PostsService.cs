@@ -82,6 +82,40 @@ namespace LinkedIn.Services
             return connectionsPosts;
         }
 
+        public async Task<IEnumerable<UserPost>> GetAllConnectionsAndUserPosts(int userId, CancellationToken cancellationToken)
+        {
+            var userConnectionsFromDb = await _unitOfWork.Connections.GetAllAcceptedConnectionsWithSenderAndReceiver(userId, cancellationToken);
+            var userPostsFromDb = await _unitOfWork.UserPosts.GetAllWithUser(cancellationToken);
+
+            var reactionsFromDb = await _unitOfWork.Reactions.GetAllWithType(cancellationToken);
+            var commentsFromDb = await _unitOfWork.Comments.GetAllWithUser(cancellationToken);
+
+            var userConnectionsIds = new List<int>();
+
+            foreach (var connection in userConnectionsFromDb)
+            {
+                if (connection.SenderId != userId)
+                {
+                    userConnectionsIds.Add(connection.SenderId);
+                }
+                else if (connection.ReceiverId != userId)
+                {
+                    userConnectionsIds.Add(connection.ReceiverId);
+                }
+            }
+
+            userConnectionsIds.Add(userId);
+
+            var connectionsPosts = userPostsFromDb.Where(userPost => userConnectionsIds.Any(id => id == userPost.PosterId)).ToList();
+
+            if (connectionsPosts == null)
+            {
+                throw new Exception("Your connections have no posts!");
+            }
+
+            return connectionsPosts;
+        }
+
         public async Task<UserPost> Create(PostCreateRequest createRequest, CancellationToken cancellationToken)
         { 
             var newPost = new UserPost

@@ -50,6 +50,20 @@ namespace LinkedIn.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetAllConnectionAndUserPosts(int userId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _postsService.GetAllConnectionsAndUserPosts(userId, cancellationToken);
+                return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult> Create(PostCreateRequest createRequest, CancellationToken cancellationToken)
         {
