@@ -20,7 +20,9 @@ namespace LinkedIn.Repository
 
         public async Task<Page> GetByName(string name, CancellationToken cancellationToken)
         {
-            return await _query.Where(page => page.Name == name).FirstOrDefaultAsync(cancellationToken);  
+            return await _query.Where(page => page.Name == name)
+                .Include(page => page.Followers)
+                .FirstOrDefaultAsync(cancellationToken);  
         }
 
         public async Task<IEnumerable<Page>> GetAllForUser(int userId, CancellationToken cancellationToken)
