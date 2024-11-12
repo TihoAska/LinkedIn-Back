@@ -9,6 +9,7 @@ using LinkedIn.Models.Account;
 using LinkedIn.Models.Pages;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.OpenApi.Any;
 
 namespace LinkedIn.Services
 {
@@ -131,12 +132,9 @@ namespace LinkedIn.Services
 
         public async Task<IEnumerable<PendingConnections>> GetAllUserConnections(int id, CancellationToken cancellationToken)
         {
-            var userFromDb = await _unitOfWork.Users.GetAllConnections(id, cancellationToken);
-            var connectionsFromDb = await _unitOfWork.Connections.GetAll(cancellationToken);
+            var connectionsFromDb = await _unitOfWork.Connections.GetAllConnectionsWithSenderAndReceiver(id, cancellationToken);
 
-            var userConnections = connectionsFromDb.Where(connection => (connection.SenderId == id || connection.ReceiverId == id));
-
-            return userConnections;
+            return connectionsFromDb;
         }
 
         public async Task<User> GetAllUserFollowers(int id, CancellationToken cancellationToken)
@@ -289,24 +287,57 @@ namespace LinkedIn.Services
             return otherSimilarProfiles;
         }
 
+        //public async Task<IEnumerable<User>> GetFivePeopleYouMayKnow(int id, CancellationToken cancellationToken)
+        //{
+        //    var userFromDb = await _unitOfWork.Users.GetById(id, cancellationToken) ?? throw new Exception("User with the id" + id + " was not found!");
+        //    var usersFromDb = await _unitOfWork.Users.GetAll(cancellationToken);
+        //    var pendingConnections = await _unitOfWork.Connections.GetAllConnectionsWithSenderAndReceiver(id, cancellationToken);
+
+        //    var peopleYouMayKnow = usersFromDb.Where(user => (user.Connections == null || !user.Connections.Contains(userFromDb)) && user.Id != id).ToList(); //sve usere osim mene
+        //    var filteredPeopleYouMayKnow = new List<User>();
+
+        //    foreach(var user in peopleYouMayKnow)
+        //    {
+        //        if(!pendingConnections.Any(pc => pc.SenderId == id && pc.ReceiverId == user.Id))
+        //        {
+        //            filteredPeopleYouMayKnow.Add(user);
+        //        }
+        //    }
+
+        //    return filteredPeopleYouMayKnow.Take(5);
+        //}
+
         public async Task<IEnumerable<User>> GetFivePeopleYouMayKnow(int id, CancellationToken cancellationToken)
         {
-            var userFromDb = await _unitOfWork.Users.GetById(id, cancellationToken) ?? throw new Exception("User with the id" + id + " was not found!");
+            var userFromDb = await _unitOfWork.Users.GetByIdWithAllConnectionsAndPages(id, cancellationToken);
             var usersFromDb = await _unitOfWork.Users.GetAll(cancellationToken);
-            var pendingConnections = await _unitOfWork.Connections.GetAllConnectionsWithSenderAndReceiver(id, cancellationToken); //dvojica kojima sam poslao connect
 
-            var peopleYouMayKnow = usersFromDb.Where(user => (user.Connections == null || !user.Connections.Contains(userFromDb)) && user.Id != id).ToList(); //sve usere osim mene
-            var filteredPeopleYouMayKnow = new List<User>();
+            var userConnections = await _unitOfWork.Connections.GetAllConnectionsWithSenderAndReceiver(id, cancellationToken);
 
-            foreach(var user in peopleYouMayKnow)
+            userFromDb.Connections = new List<User>();
+
+            foreach (var userConnection in userConnections)
             {
-                if(!pendingConnections.Any(pc => pc.SenderId == id && pc.ReceiverId == user.Id))
+                if(userConnection.SenderId != id)
                 {
-                    filteredPeopleYouMayKnow.Add(user);
+                    userFromDb.Connections.Add(userConnection.Sender);
+                } 
+                else
+                {
+                    userFromDb.Connections.Add(userConnection.Receiver);
                 }
             }
 
-            return filteredPeopleYouMayKnow.Take(5);
+            var users = usersFromDb.Where(user => user.Id != id).ToList();
+
+            if(userFromDb.Connections == null || userFromDb.Connections.Count == 0)
+            {
+                return users.Take(5);
+            }
+
+            var peopleYouMayKnow = users.Where(user => !userFromDb.Connections.Contains(user)).ToList();
+
+            return peopleYouMayKnow.Take(5);
         }
 
         public async Task<IEnumerable<User>> GetFiveOtherSimilarProfiles(int id, CancellationToken cancellationToken)
