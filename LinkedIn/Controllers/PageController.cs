@@ -128,12 +128,12 @@ namespace LinkedIn.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<ActionResult> Unfollow(int pageId, int userId, CancellationToken cancellationToken)
+        [HttpDelete]
+        public async Task<ActionResult> Unfollow([FromQuery] int userId, [FromQuery] string pageName, CancellationToken cancellationToken)
         {
             try
             {
-                var result = await _pageService.Unfollow(pageId, userId, cancellationToken);
+                var result = await _pageService.Unfollow(userId, pageName, cancellationToken);
                 return Ok(result);
             }
             catch (Exception ex)

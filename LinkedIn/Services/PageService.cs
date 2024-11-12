@@ -5,6 +5,7 @@ using LinkedIn.Models.Users;
 using LinkedIn.Repository.IRepository;
 using LinkedIn.Services.IServices;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 
@@ -98,17 +99,20 @@ namespace LinkedIn.Services
             return IdentityResult.Success;
         }
 
-        public async Task<IdentityResult> Unfollow(int pageId, int userId, CancellationToken cancellationToken)
+        public async Task<IdentityResult> Unfollow([FromQuery] int userId, [FromQuery] string pageName, CancellationToken cancellationToken)
         {
             var userFromDb = await _unitOfWork.Users.GetById(userId, cancellationToken) ?? throw new Exception("User not found!");
-            var pageFromDb = await _unitOfWork.Pages.GetById(pageId, cancellationToken) ?? throw new Exception("Page was not found!");
+            var pageFromDb = await _unitOfWork.Pages.GetByName(pageName, cancellationToken) ?? throw new Exception("Page was not found!");
+
+            if(pageFromDb.Followers == null)
+            {
+                throw new Exception("User doesn't follow the page");
+            }
 
             if (pageFromDb.Followers.Contains(userFromDb))
             {
                 pageFromDb.Followers.Remove(userFromDb);
                 pageFromDb.NumberOfFollowers--;
-
-                userFromDb.PagesFollowing.Remove(pageFromDb);
 
                 await _unitOfWork.SaveChangesAsync();
 
