@@ -172,6 +172,12 @@ namespace LinkedIn.Services
         {
             var postFromDb = await _unitOfWork.UserPosts.GetById(reactionModel.PostId, cancellationToken);
             var reactionTypeFromDb = await _unitOfWork.ReactionTypes.GetByName(reactionModel.ReactionType, cancellationToken);
+            var userFromDb = await _unitOfWork.Users.GetById(reactionModel.UserId, cancellationToken);
+
+            if(userFromDb == null)
+            {
+                throw new Exception("User was not found!");
+            }
 
             if(postFromDb == null)
             {
@@ -194,6 +200,42 @@ namespace LinkedIn.Services
                 }
 
                 await _unitOfWork.SaveChangesAsync();
+
+                var connectionsToBeNotified2 = await _unitOfWork.Connections.GetAllAcceptedConnectionsWithSenderAndReceiver(postFromDb.PosterId, cancellationToken);
+                var connectionsIdsToBeNotified2 = new List<int>();
+
+                var notificationTasks2 = new List<Task>();
+
+                foreach (var connection in connectionsToBeNotified2)
+                {
+                    connectionsIdsToBeNotified2.Add(connection.SenderId);
+                    connectionsIdsToBeNotified2.Add(connection.ReceiverId);
+                }
+
+                var uniqueConnections2 = connectionsIdsToBeNotified2.Distinct();
+
+                foreach (var userId in uniqueConnections2)
+                {
+                    notificationTasks2.Add(_websocketHandler.NotifyUserOfNewEvent(userId, new ReactionDTO
+                    {
+                        Id = existingReaction.Id,
+                        PostId = reactionModel.PostId,
+                        TimeReacted = DateTime.UtcNow.ToUniversalTime(),
+                        UserId = reactionModel.UserId,
+                        Type = new ReactionTypeDTO 
+                        { 
+                            Id = reactionTypeFromDb.Id,
+                            Name = reactionTypeFromDb.Name,
+                            IconUrl = reactionTypeFromDb.IconUrl,
+                        },
+                        UserPost = postFromDb,
+                        User = userFromDb,
+                    }, "postReaction"));
+
+                }
+
+                await Task.WhenAll(notificationTasks2);
+
                 return postFromDb;
             }
 
@@ -210,6 +252,40 @@ namespace LinkedIn.Services
             postFromDb.NumberOfReactions++;
 
             await _unitOfWork.SaveChangesAsync();
+
+            var connectionsToBeNotified = await _unitOfWork.Connections.GetAllAcceptedConnectionsWithSenderAndReceiver(postFromDb.PosterId, cancellationToken);
+            var connectionsIdsToBeNotified = new List<int>();
+
+            var notificationTasks = new List<Task>();
+
+            foreach (var connection in connectionsToBeNotified)
+            {
+                connectionsIdsToBeNotified.Add(connection.SenderId);
+                connectionsIdsToBeNotified.Add(connection.ReceiverId);
+            }
+
+            var uniqueConnections = connectionsIdsToBeNotified.Distinct();
+
+            foreach (var userId in uniqueConnections)
+            {
+                notificationTasks.Add(_websocketHandler.NotifyUserOfNewEvent(userId, new ReactionDTO
+                {
+                    Id = newPostReaction.Id,
+                    PostId = reactionModel.PostId,
+                    TimeReacted = DateTime.UtcNow.ToUniversalTime(),
+                    UserId = reactionModel.UserId,
+                    Type = new ReactionTypeDTO
+                    {
+                        Id = reactionTypeFromDb.Id,
+                        Name = reactionTypeFromDb.Name,
+                        IconUrl = reactionTypeFromDb.IconUrl,
+                    },
+                    UserPost = postFromDb,
+                    User = userFromDb,
+                }, "postReaction"));
+            }
+
+            await Task.WhenAll(notificationTasks);
 
             return postFromDb;
         }
